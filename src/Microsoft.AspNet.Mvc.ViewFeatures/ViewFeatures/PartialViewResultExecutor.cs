@@ -83,8 +83,7 @@ namespace Microsoft.AspNet.Mvc.ViewFeatures
                             view = result.View,
                         });
                 }
-
-                Logger.LogVerbose("The partial view '{PartialViewName}' was found.", viewName);
+                Logger.PartialViewFound(viewName);
             }
             else
             {
@@ -102,10 +101,7 @@ namespace Microsoft.AspNet.Mvc.ViewFeatures
                         });
                 }
 
-                Logger.LogError(
-                    "The partial view '{PartialViewName}' was not found. Searched locations: {SearchedViewLocations}",
-                    viewName,
-                    result.SearchedLocations);
+                Logger.PartialViewNotFound(viewName, result.SearchedLocations);
             }
 
             return result;

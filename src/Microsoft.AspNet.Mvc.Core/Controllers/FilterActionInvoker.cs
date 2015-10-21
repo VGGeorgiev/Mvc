@@ -12,6 +12,7 @@ using Microsoft.AspNet.Mvc.Filters;
 using Microsoft.AspNet.Mvc.Formatters;
 using Microsoft.AspNet.Mvc.Infrastructure;
 using Microsoft.AspNet.Mvc.Internal;
+using Microsoft.AspNet.Mvc.Logging;
 using Microsoft.AspNet.Mvc.ModelBinding;
 using Microsoft.AspNet.Mvc.ModelBinding.Validation;
 using Microsoft.Extensions.Logging;
@@ -47,17 +48,6 @@ namespace Microsoft.AspNet.Mvc.Controllers
 
         private ResultExecutingContext _resultExecutingContext;
         private ResultExecutedContext _resultExecutedContext;
-
-        private const string AuthorizationFailureLogMessage =
-            "Authorization failed for the request at filter '{AuthorizationFilter}'.";
-        private const string ResourceFilterShortCircuitLogMessage =
-            "Request was short circuited at resource filter '{ResourceFilter}'.";
-        private const string ActionFilterShortCircuitLogMessage =
-            "Request was short circuited at action filter '{ActionFilter}'.";
-        private const string ExceptionFilterShortCircuitLogMessage =
-            "Request was short circuited at exception filter '{ExceptionFilter}'.";
-        private const string ResultFilterShortCircuitLogMessage =
-            "Request was short circuited at result filter '{ResultFilter}'.";
         
         public FilterActionInvoker(
             ActionContext actionContext,
@@ -297,7 +287,7 @@ namespace Microsoft.AspNet.Mvc.Controllers
                 }
                 else
                 {
-                    Logger.LogWarning(AuthorizationFailureLogMessage, current.FilterAsync.GetType().FullName);
+                    Logger.AuthorizationFailure(current.FilterAsync.GetType().FullName);
                 }
             }
             else if (current.Filter != null)
@@ -311,7 +301,7 @@ namespace Microsoft.AspNet.Mvc.Controllers
                 }
                 else
                 {
-                    Logger.LogWarning(AuthorizationFailureLogMessage, current.Filter.GetType().FullName);
+                    Logger.AuthorizationFailure(current.Filter.GetType().FullName);
                 }
             }
             else
@@ -367,8 +357,7 @@ namespace Microsoft.AspNet.Mvc.Controllers
                         // If we get here then the filter didn't call 'next' indicating a short circuit
                         if (_resourceExecutingContext.Result != null)
                         {
-                            Logger.LogVerbose(
-                                ResourceFilterShortCircuitLogMessage,
+                            Logger.ResourceFilterShortCircuited(
                                 item.FilterAsync.GetType().FullName);
 
                             await InvokeResultAsync(_resourceExecutingContext.Result);
@@ -388,8 +377,8 @@ namespace Microsoft.AspNet.Mvc.Controllers
                     if (_resourceExecutingContext.Result != null)
                     {
                         // Short-circuited by setting a result.
-                        Logger.LogVerbose(ResourceFilterShortCircuitLogMessage, item.Filter.GetType().FullName);
-
+                        Logger.ResourceFilterShortCircuited(item.Filter.GetType().FullName);
+                        
                         await InvokeResultAsync(_resourceExecutingContext.Result);
 
                         _resourceExecutedContext = new ResourceExecutedContext(_resourceExecutingContext, _filters)
@@ -506,8 +495,7 @@ namespace Microsoft.AspNet.Mvc.Controllers
 
                     if (_exceptionContext.Exception == null)
                     {
-                        Logger.LogVerbose(
-                            ExceptionFilterShortCircuitLogMessage,
+                        Logger.ExceptionFilterShortCircuited(
                             current.FilterAsync.GetType().FullName);
                     }
                 }
@@ -527,8 +515,7 @@ namespace Microsoft.AspNet.Mvc.Controllers
 
                     if (_exceptionContext.Exception == null)
                     {
-                        Logger.LogVerbose(
-                            ExceptionFilterShortCircuitLogMessage,
+                        Logger.ExceptionFilterShortCircuited(
                             current.Filter.GetType().FullName);
                     }
                 }
@@ -607,8 +594,8 @@ namespace Microsoft.AspNet.Mvc.Controllers
                     if (_actionExecutedContext == null)
                     {
                         // If we get here then the filter didn't call 'next' indicating a short circuit
-
-                        Logger.LogVerbose(ActionFilterShortCircuitLogMessage, item.FilterAsync.GetType().FullName);
+                        Logger.ActionFilterShortCircuited(
+                            item.FilterAsync.GetType().FullName);
 
                         _actionExecutedContext = new ActionExecutedContext(
                             _actionExecutingContext,
@@ -627,8 +614,8 @@ namespace Microsoft.AspNet.Mvc.Controllers
                     if (_actionExecutingContext.Result != null)
                     {
                         // Short-circuited by setting a result.
-
-                        Logger.LogVerbose(ActionFilterShortCircuitLogMessage, item.Filter.GetType().FullName);
+                        Logger.ActionFilterShortCircuited(
+                            item.Filter.GetType().FullName);
 
                         _actionExecutedContext = new ActionExecutedContext(
                             _actionExecutingContext,
@@ -752,7 +739,7 @@ namespace Microsoft.AspNet.Mvc.Controllers
                     if (_resultExecutedContext == null || _resultExecutingContext.Cancel == true)
                     {
                         // Short-circuited by not calling next || Short-circuited by setting Cancel == true
-                        Logger.LogVerbose(ResourceFilterShortCircuitLogMessage, item.FilterAsync.GetType().FullName);
+                        Logger.ResourceFilterShortCircuited(item.FilterAsync.GetType().FullName);
 
                         _resultExecutedContext = new ResultExecutedContext(
                             _resultExecutingContext,
@@ -771,7 +758,8 @@ namespace Microsoft.AspNet.Mvc.Controllers
                     if (_resultExecutingContext.Cancel == true)
                     {
                         // Short-circuited by setting Cancel == true
-                        Logger.LogVerbose(ResourceFilterShortCircuitLogMessage, item.Filter.GetType().FullName);
+                        Logger.ResourceFilterShortCircuited(
+                            item.Filter.GetType().FullName);
 
                         _resultExecutedContext = new ResultExecutedContext(
                             _resultExecutingContext,

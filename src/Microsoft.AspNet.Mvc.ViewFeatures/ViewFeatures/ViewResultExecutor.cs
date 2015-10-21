@@ -4,6 +4,7 @@
 using System;
 using System.Diagnostics;
 using System.Threading.Tasks;
+using Microsoft.AspNet.Mvc.Logging;
 using Microsoft.AspNet.Mvc.Infrastructure;
 using Microsoft.AspNet.Mvc.Logging;
 using Microsoft.AspNet.Mvc.ViewEngines;
@@ -84,7 +85,7 @@ namespace Microsoft.AspNet.Mvc.ViewFeatures
                         });
                 }
 
-                Logger.LogVerbose("The view '{ViewName}' was found.", viewName);
+                Logger.ViewFound(viewName);
             }
             else
             {
@@ -101,11 +102,7 @@ namespace Microsoft.AspNet.Mvc.ViewFeatures
                             searchedLocations = result.SearchedLocations
                         });
                 }
-
-                Logger.LogError(
-                    "The view '{ViewName}' was not found. Searched locations: {SearchedViewLocations}",
-                    viewName,
-                    result.SearchedLocations);
+                Logger.ViewNotFound(viewName, result.SearchedLocations);
             }
 
             return result;

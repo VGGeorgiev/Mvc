@@ -63,14 +63,13 @@ namespace Microsoft.AspNet.Mvc.TagHelpers.Internal
                     match => match.PresentAttributes.Any(
                         attribute => PartiallyMatchedAttributes.Contains(
                             attribute, StringComparer.OrdinalIgnoreCase)));
-
+                //TODO: What the heck is this thing?
                 logger.LogWarning(new PartialModeMatchLogValues<TMode>(uniqueId, viewPath, partialOnlyMatches));
             }
 
             if (logger.IsEnabled(LogLevel.Verbose) && !FullMatches.Any())
             {
-                logger.LogVerbose(
-                    "Skipping processing for tag helper '{TagHelper}' with id '{TagHelperId}'.",
+                logger.TagHelperSkippingProcessing(
                     tagHelper.GetType().GetTypeInfo().FullName,
                     uniqueId);
             }
