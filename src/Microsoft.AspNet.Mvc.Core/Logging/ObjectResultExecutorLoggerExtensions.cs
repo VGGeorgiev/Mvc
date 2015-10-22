@@ -2,6 +2,7 @@
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 
 using System;
+using System.Collections.Generic;
 using Microsoft.Extensions.Logging;
 using Microsoft.Net.Http.Headers;
 
@@ -14,7 +15,7 @@ namespace Microsoft.AspNet.Mvc.Logging
         private static Action<ILogger, string, string, Exception> _formatterSelected;
         private static Action<ILogger, string, Exception> _skippedContentNegotiation;
         private static Action<ILogger, string, Exception> _noAcceptForNegotiation;
-        private static Action<ILogger, string, Exception> _noFormatterFromNegotiation;
+        private static Action<ILogger, IEnumerable<MediaTypeHeaderValue>, Exception> _noFormatterFromNegotiation;
 
         static ObjectResultExecutorLoggerExtensions()
         {
@@ -39,7 +40,7 @@ namespace Microsoft.AspNet.Mvc.Logging
                 LogLevel.Verbose,
                 4,
                 "No information found on request to perform content negotiation.");
-            _noFormatterFromNegotiation = LoggerMessage.Define<string>(
+            _noFormatterFromNegotiation = LoggerMessage.Define<IEnumerable<MediaTypeHeaderValue>>(
                 LogLevel.Verbose,
                 5,
                 "Could not find an output formatter based on content negotiation. Accepted types were ({AcceptTypes})");
@@ -56,7 +57,7 @@ namespace Microsoft.AspNet.Mvc.Logging
         }
 
         public static void FormatterSelected(
-            this ILogger logger, 
+            this ILogger logger,
             string formatter,
             MediaTypeHeaderValue contentType)
         {
@@ -73,7 +74,7 @@ namespace Microsoft.AspNet.Mvc.Logging
             _noAcceptForNegotiation(logger, null, null);
         }
 
-        public static void NoFormatterFromNegotiation(this ILogger logger, string acceptTypes)
+        public static void NoFormatterFromNegotiation(this ILogger logger, IEnumerable<MediaTypeHeaderValue> acceptTypes)
         {
             _noFormatterFromNegotiation(logger, acceptTypes, null);
         }

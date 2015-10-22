@@ -758,8 +758,7 @@ namespace Microsoft.AspNet.Mvc.Controllers
                     if (_resultExecutingContext.Cancel == true)
                     {
                         // Short-circuited by setting Cancel == true
-                        Logger.ResourceFilterShortCircuited(
-                            item.Filter.GetType().FullName);
+                        Logger.ResourceFilterShortCircuited(item.Filter.GetType().FullName);
 
                         _resultExecutedContext = new ResultExecutedContext(
                             _resultExecutingContext,

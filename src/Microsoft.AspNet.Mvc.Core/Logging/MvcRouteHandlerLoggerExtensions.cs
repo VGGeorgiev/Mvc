@@ -4,6 +4,7 @@
 using System;
 using System.Collections.Generic;
 using Microsoft.AspNet.Mvc.Abstractions;
+using Microsoft.AspNet.Http;
 using Microsoft.Extensions.Logging;
 
 namespace Microsoft.AspNet.Mvc.Logging
@@ -56,7 +57,7 @@ namespace Microsoft.AspNet.Mvc.Logging
             _noMatchingActions = LoggerMessage.Define<string>(
                 LogLevel.Verbose,
                 1,
-                "No actions matched the current request.");
+                "No actions matched the current request with path '{Path}'.");
             _executingAction = LoggerMessage.Define<string>(
                 LogLevel.Verbose,
                 2,
@@ -66,9 +67,9 @@ namespace Microsoft.AspNet.Mvc.Logging
         }
 
 
-        public static void NoMatchingActions(this ILogger logger)
+        public static void NoMatchingActions(this ILogger logger, HttpContext context)
         {
-            _noMatchingActions(logger, string.Empty, null);
+            _noMatchingActions(logger, context.Request.Path, null);
         }
 
         public static void ExecutingAction(this ILogger logger, string actionDisplayName)

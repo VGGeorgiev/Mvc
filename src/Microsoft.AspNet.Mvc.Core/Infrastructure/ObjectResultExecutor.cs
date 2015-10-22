@@ -9,7 +9,6 @@ using System.Text;
 using System.Threading.Tasks;
 using Microsoft.AspNet.Http;
 using Microsoft.AspNet.Mvc.Core;
-using Microsoft.AspNet.Mvc.Logging;
 using Microsoft.AspNet.Mvc.Formatters;
 using Microsoft.AspNet.Mvc.Internal;
 using Microsoft.AspNet.Mvc.Logging;
@@ -216,8 +215,7 @@ namespace Microsoft.AspNet.Mvc.Infrastructure
                 // the type. Let the formatter choose the Content-Type.
                 if (selectedFormatter == null)
                 {
-                    var acceptTypes = string.Join(", ", sortedAcceptHeaderMediaTypes);
-                    Logger.NoFormatterFromNegotiation(acceptTypes);
+                    Logger.NoFormatterFromNegotiation(sortedAcceptHeaderMediaTypes);
 
                     // Set this flag to indicate that content-negotiation has failed to let formatters decide
                     // if they want to write the response or not.

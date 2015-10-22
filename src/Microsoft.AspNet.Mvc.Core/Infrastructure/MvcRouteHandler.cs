@@ -58,7 +58,7 @@ namespace Microsoft.AspNet.Mvc.Infrastructure
             var actionDescriptor = await _actionSelector.SelectAsync(context);
             if (actionDescriptor == null)
             {
-                _logger.NoMatchingActions();
+                _logger.NoMatchingActions(context.HttpContext);
                 return;
             }
 

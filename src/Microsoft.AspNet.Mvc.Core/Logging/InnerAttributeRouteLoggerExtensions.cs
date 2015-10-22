@@ -9,7 +9,7 @@ namespace Microsoft.AspNet.Mvc.Logging
 
         static InnerAttributeRouteLoggerExtensions()
         {
-             _matchedRouteName = LoggerMessage.Define<string, string>(
+            _matchedRouteName = LoggerMessage.Define<string, string>(
                 LogLevel.Verbose,
                 1,
                 "Request successfully matched the route with name '{RouteName}' and template '{RouteTemplate}'.");

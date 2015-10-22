@@ -23,7 +23,7 @@ namespace Microsoft.AspNet.Mvc.Logging
                 LogLevel.Verbose,
                 2,
                 "Action '{ActionDisplayName}' with id '{ActionId}' did not match the " +
-                                    "constraint '{ActionConstraint}'");
+                    "constraint '{ActionConstraint}'");
         }
 
         public static void AmbiguousActions(this ILogger logger, string actionNames)

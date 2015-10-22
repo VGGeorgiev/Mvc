@@ -22,15 +22,15 @@ namespace Microsoft.AspNet.Mvc.Logging
         }
 
         public static void PartialViewFound(
-            this ILogger logger, 
+            this ILogger logger,
             string partialViewName)
         {
             _partialViewFound(logger, partialViewName, null);
         }
 
         public static void PartialViewNotFound(
-            this ILogger logger, 
-            string partialViewName, 
+            this ILogger logger,
+            string partialViewName,
             IEnumerable<string> searchedLocations)
         {
             _partialViewNotFound(logger, partialViewName, searchedLocations, null);
