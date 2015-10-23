@@ -287,7 +287,7 @@ namespace Microsoft.AspNet.Mvc.Controllers
                 }
                 else
                 {
-                    Logger.AuthorizationFailure(current.FilterAsync.GetType().FullName);
+                    Logger.AuthorizationFailure(current.FilterAsync);
                 }
             }
             else if (current.Filter != null)
@@ -301,7 +301,7 @@ namespace Microsoft.AspNet.Mvc.Controllers
                 }
                 else
                 {
-                    Logger.AuthorizationFailure(current.Filter.GetType().FullName);
+                    Logger.AuthorizationFailure(current.Filter);
                 }
             }
             else
@@ -357,8 +357,7 @@ namespace Microsoft.AspNet.Mvc.Controllers
                         // If we get here then the filter didn't call 'next' indicating a short circuit
                         if (_resourceExecutingContext.Result != null)
                         {
-                            Logger.ResourceFilterShortCircuited(
-                                item.FilterAsync.GetType().FullName);
+                            Logger.ResourceFilterShortCircuited(item.FilterAsync);
 
                             await InvokeResultAsync(_resourceExecutingContext.Result);
                         }
@@ -377,7 +376,7 @@ namespace Microsoft.AspNet.Mvc.Controllers
                     if (_resourceExecutingContext.Result != null)
                     {
                         // Short-circuited by setting a result.
-                        Logger.ResourceFilterShortCircuited(item.Filter.GetType().FullName);
+                        Logger.ResourceFilterShortCircuited(item.Filter);
                         
                         await InvokeResultAsync(_resourceExecutingContext.Result);
 
@@ -495,8 +494,7 @@ namespace Microsoft.AspNet.Mvc.Controllers
 
                     if (_exceptionContext.Exception == null)
                     {
-                        Logger.ExceptionFilterShortCircuited(
-                            current.FilterAsync.GetType().FullName);
+                        Logger.ExceptionFilterShortCircuited(current.FilterAsync);
                     }
                 }
             }
@@ -515,8 +513,7 @@ namespace Microsoft.AspNet.Mvc.Controllers
 
                     if (_exceptionContext.Exception == null)
                     {
-                        Logger.ExceptionFilterShortCircuited(
-                            current.Filter.GetType().FullName);
+                        Logger.ExceptionFilterShortCircuited(current.Filter);
                     }
                 }
             }
@@ -594,8 +591,7 @@ namespace Microsoft.AspNet.Mvc.Controllers
                     if (_actionExecutedContext == null)
                     {
                         // If we get here then the filter didn't call 'next' indicating a short circuit
-                        Logger.ActionFilterShortCircuited(
-                            item.FilterAsync.GetType().FullName);
+                        Logger.ActionFilterShortCircuited(item.FilterAsync);
 
                         _actionExecutedContext = new ActionExecutedContext(
                             _actionExecutingContext,
@@ -614,8 +610,7 @@ namespace Microsoft.AspNet.Mvc.Controllers
                     if (_actionExecutingContext.Result != null)
                     {
                         // Short-circuited by setting a result.
-                        Logger.ActionFilterShortCircuited(
-                            item.Filter.GetType().FullName);
+                        Logger.ActionFilterShortCircuited(item.Filter);
 
                         _actionExecutedContext = new ActionExecutedContext(
                             _actionExecutingContext,
@@ -739,7 +734,7 @@ namespace Microsoft.AspNet.Mvc.Controllers
                     if (_resultExecutedContext == null || _resultExecutingContext.Cancel == true)
                     {
                         // Short-circuited by not calling next || Short-circuited by setting Cancel == true
-                        Logger.ResourceFilterShortCircuited(item.FilterAsync.GetType().FullName);
+                        Logger.ResourceFilterShortCircuited(item.FilterAsync);
 
                         _resultExecutedContext = new ResultExecutedContext(
                             _resultExecutingContext,
@@ -758,7 +753,7 @@ namespace Microsoft.AspNet.Mvc.Controllers
                     if (_resultExecutingContext.Cancel == true)
                     {
                         // Short-circuited by setting Cancel == true
-                        Logger.ResourceFilterShortCircuited(item.Filter.GetType().FullName);
+                        Logger.ResourceFilterShortCircuited(item.Filter);
 
                         _resultExecutedContext = new ResultExecutedContext(
                             _resultExecutingContext,

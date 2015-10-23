@@ -3,6 +3,7 @@
 
 using System;
 using System.Collections.Generic;
+using Microsoft.AspNet.Mvc.Formatters;
 using Microsoft.Extensions.Logging;
 using Microsoft.Net.Http.Headers;
 
@@ -12,7 +13,7 @@ namespace Microsoft.AspNet.Mvc.Logging
     {
         private static Action<ILogger, string, Exception> _objectResultExecuting;
         private static Action<ILogger, string, Exception> _noFormatter;
-        private static Action<ILogger, string, string, Exception> _formatterSelected;
+        private static Action<ILogger, IOutputFormatter, string, Exception> _formatterSelected;
         private static Action<ILogger, string, Exception> _skippedContentNegotiation;
         private static Action<ILogger, string, Exception> _noAcceptForNegotiation;
         private static Action<ILogger, IEnumerable<MediaTypeHeaderValue>, Exception> _noFormatterFromNegotiation;
@@ -27,7 +28,7 @@ namespace Microsoft.AspNet.Mvc.Logging
                 LogLevel.Information,
                 1,
                 "Executing ObjectResult, writing value {Value}.");
-            _formatterSelected = LoggerMessage.Define<string, string>(
+            _formatterSelected = LoggerMessage.Define<IOutputFormatter, string>(
                 LogLevel.Verbose,
                 2,
                 "Selected output formatter '{OutputFormatter}' and content type " +
@@ -50,18 +51,21 @@ namespace Microsoft.AspNet.Mvc.Logging
         {
             _objectResultExecuting(logger, Convert.ToString(value), null);
         }
-        
-	public static void NoFormatter(this ILogger logger, MediaTypeHeaderValue contentType)
+
+        public static void NoFormatter(
+            this ILogger logger,
+            OutputFormatterWriteContext formatterContext)
         {
-            _noFormatter(logger, Convert.ToString(contentType), null);
+            _noFormatter(logger, Convert.ToString(formatterContext.ContentType), null);
         }
 
         public static void FormatterSelected(
             this ILogger logger,
-            string formatter,
-            MediaTypeHeaderValue contentType)
+            IOutputFormatter outputFormatter,
+            OutputFormatterWriteContext context)
         {
-            _formatterSelected(logger, formatter, Convert.ToString(contentType), null);
+            var contentType = Convert.ToString(context.ContentType);
+            _formatterSelected(logger, outputFormatter, contentType, null);
         }
 
         public static void SkippedContentNegotiation(this ILogger logger, MediaTypeHeaderValue contentType)

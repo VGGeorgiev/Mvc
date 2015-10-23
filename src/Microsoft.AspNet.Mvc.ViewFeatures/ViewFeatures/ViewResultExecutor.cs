@@ -4,7 +4,6 @@
 using System;
 using System.Diagnostics;
 using System.Threading.Tasks;
-using Microsoft.AspNet.Mvc.Logging;
 using Microsoft.AspNet.Mvc.Infrastructure;
 using Microsoft.AspNet.Mvc.Logging;
 using Microsoft.AspNet.Mvc.ViewEngines;
@@ -131,7 +130,6 @@ namespace Microsoft.AspNet.Mvc.ViewFeatures
             {
                 throw new ArgumentNullException(nameof(viewResult));
             }
-
 
             Logger.ViewResultExecuting(view);
 

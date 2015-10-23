@@ -22,7 +22,7 @@ namespace Microsoft.AspNet.Mvc.Logging
             _constraintMismatch = LoggerMessage.Define<string, string, IActionConstraint>(
                 LogLevel.Verbose,
                 2,
-                "Action '{ActionDisplayName}' with id '{ActionId}' did not match the " +
+                "Action '{ActionName}' with id '{ActionId}' did not match the " +
                     "constraint '{ActionConstraint}'");
         }
 
@@ -33,11 +33,11 @@ namespace Microsoft.AspNet.Mvc.Logging
 
         public static void ConstraintMismatch(
             this ILogger logger,
-            string actionDisplayName,
+            string actionName,
             string actionId,
             IActionConstraint actionConstraint)
         {
-            _constraintMismatch(logger, actionDisplayName, actionId, actionConstraint, null);
+            _constraintMismatch(logger, actionName, actionId, actionConstraint, null);
         }
     }
 }

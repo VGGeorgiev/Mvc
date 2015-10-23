@@ -3,8 +3,8 @@
 
 using System;
 using System.Collections.Generic;
-using Microsoft.AspNet.Mvc.Abstractions;
 using Microsoft.AspNet.Http;
+using Microsoft.AspNet.Mvc.Abstractions;
 using Microsoft.Extensions.Logging;
 
 namespace Microsoft.AspNet.Mvc.Logging
@@ -47,7 +47,7 @@ namespace Microsoft.AspNet.Mvc.Logging
             }
         }
 
-	private static Action<ILogger, string, Exception> _noMatchingActions;
+        private static Action<ILogger, string, Exception> _noMatchingActions;
         private static Action<ILogger, string, Exception> _executingAction;
 
         private static Func<ILogger, string, IDisposable> _actionScope;
@@ -61,20 +61,19 @@ namespace Microsoft.AspNet.Mvc.Logging
             _executingAction = LoggerMessage.Define<string>(
                 LogLevel.Verbose,
                 2,
-                "Executing action {ActionDisplayName}");
+                "Executing action {ActionName}");
             _actionScope = LoggerMessage.DefineScope<string>(
                 "ActionId: {ActionId}");
         }
-
 
         public static void NoMatchingActions(this ILogger logger, HttpContext context)
         {
             _noMatchingActions(logger, context.Request.Path, null);
         }
 
-        public static void ExecutingAction(this ILogger logger, string actionDisplayName)
+        public static void ExecutingAction(this ILogger logger, string actionName)
         {
-            _executingAction(logger, actionDisplayName, null);
+            _executingAction(logger, actionName, null);
         }
     }
 }

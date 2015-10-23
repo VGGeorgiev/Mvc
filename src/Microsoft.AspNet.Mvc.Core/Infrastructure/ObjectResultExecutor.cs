@@ -129,16 +129,13 @@ namespace Microsoft.AspNet.Mvc.Infrastructure
             if (selectedFormatter == null)
             {
                 // No formatter supports this.
-                Logger.NoFormatter(formatterContext.ContentType);
+                Logger.NoFormatter(formatterContext);
 
                 context.HttpContext.Response.StatusCode = StatusCodes.Status406NotAcceptable;
                 return TaskCache.CompletedTask;
             }
 
-            Logger.FormatterSelected(
-                selectedFormatter.GetType().FullName,
-                formatterContext.ContentType);
-            
+            Logger.FormatterSelected(selectedFormatter, formatterContext);
             Logger.ObjectResultExecuting(context);
             
             result.OnFormatting(context);

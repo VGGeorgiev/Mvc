@@ -2,55 +2,64 @@
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 
 using System;
+using Microsoft.AspNet.Mvc.Filters;
 using Microsoft.Extensions.Logging;
 
 namespace Microsoft.AspNet.Mvc.Logging
 {
     public static class FilterActionInvokerLoggerExtensions
     {
-        private static Action<ILogger, string, Exception> _authorizationFailure;
-        private static Action<ILogger, string, Exception> _resourceFilterShortCircuit;
-        private static Action<ILogger, string, Exception> _actionFilterShortCircuit;
-        private static Action<ILogger, string, Exception> _exceptionFilterShortCircuit;
+        private static Action<ILogger, object, Exception> _authorizationFailure;
+        private static Action<ILogger, object, Exception> _resourceFilterShortCircuit;
+        private static Action<ILogger, object, Exception> _actionFilterShortCircuit;
+        private static Action<ILogger, object, Exception> _exceptionFilterShortCircuit;
 
         static FilterActionInvokerLoggerExtensions()
         {
-            _authorizationFailure = LoggerMessage.Define<string>(
+            _authorizationFailure = LoggerMessage.Define<object>(
                 LogLevel.Warning,
                 1,
                 "Authorization failed for the request at filter '{AuthorizationFilter}'.");
-            _resourceFilterShortCircuit = LoggerMessage.Define<string>(
+            _resourceFilterShortCircuit = LoggerMessage.Define<object>(
                 LogLevel.Verbose,
                 2,
                 "Request was short circuited at resource filter '{ResourceFilter}'.");
-            _actionFilterShortCircuit = LoggerMessage.Define<string>(
+            _actionFilterShortCircuit = LoggerMessage.Define<object>(
                 LogLevel.Verbose,
                 3,
                 "Request was short circuited at action filter '{ActionFilter}'.");
-            _exceptionFilterShortCircuit = LoggerMessage.Define<string>(
+            _exceptionFilterShortCircuit = LoggerMessage.Define<object>(
                 LogLevel.Verbose,
                 4,
                 "Request was short circuited at exception filter '{ExceptionFilter}'.");
         }
 
-        public static void AuthorizationFailure(this ILogger logger, string filterName)
+        public static void AuthorizationFailure(
+            this ILogger logger,
+            IFilterMetadata filter)
         {
-            _authorizationFailure(logger, filterName, null);
+            _authorizationFailure(logger, filter, null);
         }
 
-        public static void ResourceFilterShortCircuited(this ILogger logger, string filterName)
+        public static void ResourceFilterShortCircuited(
+            this ILogger logger,
+            IFilterMetadata filter)
         {
-            _resourceFilterShortCircuit(logger, filterName, null);
+            _resourceFilterShortCircuit(logger, filter, null);
         }
 
-        public static void ExceptionFilterShortCircuited(this ILogger logger, string filterName)
+        public static void ExceptionFilterShortCircuited(
+            this ILogger logger,
+            IFilterMetadata filter)
         {
-            _exceptionFilterShortCircuit(logger, filterName, null);
+            _exceptionFilterShortCircuit(logger, filter, null);
         }
 
-        public static void ActionFilterShortCircuited(this ILogger logger, string filterName)
+        public static void ActionFilterShortCircuited(
+            this ILogger logger,
+            IFilterMetadata filter)
         {
-            _actionFilterShortCircuit(logger, filterName, null);
+            _actionFilterShortCircuit(logger, filter, null);
         }
     }
 }
