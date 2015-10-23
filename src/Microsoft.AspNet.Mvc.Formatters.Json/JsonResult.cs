@@ -98,7 +98,9 @@ namespace Microsoft.AspNet.Mvc
                     .SerializerSettings;
             }
 
-            using (var writer = new HttpResponseStreamWriter(response.Body, contentTypeHeader.Encoding))
+            using (var writer = new HttpResponseStreamWriter(
+                response.Body,
+                contentTypeHeader.Encoding ?? DefaultContentType.Encoding))
             {
                 using (var jsonWriter = new JsonTextWriter(writer))
                 {

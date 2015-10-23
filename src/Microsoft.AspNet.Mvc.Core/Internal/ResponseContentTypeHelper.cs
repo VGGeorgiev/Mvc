@@ -28,23 +28,13 @@ namespace Microsoft.AspNet.Mvc.Internal
             // 1. User sets the ContentType property on the action result
             if (actionResultContentType != null)
             {
-                if (actionResultContentType.Encoding == null)
-                {
-                    // Do not modify the user supplied content type, so copy it instead
-                    var contentType = actionResultContentType.Copy();
-                    contentType.Encoding = defaultContentType.Encoding;
-                    return contentType;
-                }
-
                 return actionResultContentType;
             }
 
             // 2. User sets the ContentType property on the http response directly
             if (!string.IsNullOrEmpty(httpResponseContentType))
             {
-                var contentType = MediaTypeHeaderValue.Parse(httpResponseContentType);
-                contentType.Encoding = contentType.Encoding ?? defaultContentType.Encoding;
-                return contentType;
+                return MediaTypeHeaderValue.Parse(httpResponseContentType);
             }
 
             // 3. Fall-back to the default content type

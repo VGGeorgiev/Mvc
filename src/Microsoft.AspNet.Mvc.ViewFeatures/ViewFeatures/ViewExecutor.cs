@@ -143,7 +143,9 @@ namespace Microsoft.AspNet.Mvc.ViewFeatures
                 response.StatusCode = statusCode.Value;
             }
 
-            using (var writer = WriterFactory.CreateWriter(response.Body, resolvedContentType.Encoding))
+            using (var writer = WriterFactory.CreateWriter(
+                response.Body,
+                resolvedContentType.Encoding ?? DefaultContentType.Encoding))
             {
                 var viewContext = new ViewContext(
                     actionContext,

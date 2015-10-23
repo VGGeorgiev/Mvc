@@ -59,7 +59,7 @@ namespace Microsoft.AspNet.Mvc
                 var bufferingFeature = response.HttpContext.Features.Get<IHttpBufferingFeature>();
                 bufferingFeature?.DisableResponseBuffering();
 
-                return response.WriteAsync(Content, contentTypeHeader.Encoding);
+                return response.WriteAsync(Content, contentTypeHeader.Encoding ?? DefaultContentType.Encoding);
             }
 
             return TaskCache.CompletedTask;

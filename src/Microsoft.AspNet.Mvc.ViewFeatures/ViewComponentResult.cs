@@ -92,7 +92,9 @@ namespace Microsoft.AspNet.Mvc
                 response.StatusCode = StatusCode.Value;
             }
 
-            using (var writer = new HttpResponseStreamWriter(response.Body, contentType.Encoding))
+            using (var writer = new HttpResponseStreamWriter(
+                response.Body,
+                contentType.Encoding ?? ViewExecutor.DefaultContentType.Encoding))
             {
                 var viewContext = new ViewContext(
                     context,
