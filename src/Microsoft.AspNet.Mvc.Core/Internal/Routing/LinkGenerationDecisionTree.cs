@@ -3,9 +3,11 @@
 
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using Microsoft.AspNet.Mvc.Internal.DecisionTree;
 using Microsoft.AspNet.Mvc.Routing;
 using Microsoft.AspNet.Routing;
+using Microsoft.AspNet.Routing.Template;
 
 namespace Microsoft.AspNet.Mvc.Internal.Routing
 {
@@ -131,8 +133,25 @@ namespace Microsoft.AspNet.Mvc.Internal.Routing
 
             public int Compare(LinkGenerationMatch x, LinkGenerationMatch y)
             {
-                // For these comparisons lower is better.
+                //First by number of variables
+                if(x.Entry.Template.Parameters != y.Entry.Template.Parameters)
+                {
+                    //We need this to be in descending order
+                    return y.Entry.Template.Parameters.Count.CompareTo(x.Entry.Template.Parameters.Count);
+                }
 
+                //Second by if those variables are default or optional
+                var isDefault = new Func<TemplatePart, bool>(p => p.DefaultValue != null || p.IsCatchAll || p.IsOptional);
+
+                var xDefaultParams = x.Entry.Template.Parameters.Count(isDefault);
+                var yDefaultParams = y.Entry.Template.Parameters.Count(isDefault);
+
+                if (xDefaultParams != yDefaultParams)
+                {
+                    return xDefaultParams.CompareTo(yDefaultParams);
+                }
+
+                // For these comparisons lower is better.
                 if (x.Entry.Order != y.Entry.Order)
                 {
                     return x.Entry.Order.CompareTo(y.Entry.Order);
