@@ -22,6 +22,12 @@ namespace UrlHelperWebSite.Controllers
             return _urlHelper.Action("Get", "RouteValueUsage", new { id = 1234 });
         }
 
+        [HttpGet("urlHelper/base")]
+        public string UrlHelperBase()
+        {
+            return _urlHelper.Action("Get", "RouteValueUsage");
+        }
+
         [HttpGet("Get/{id}")]
         public string Get(int id)
         {

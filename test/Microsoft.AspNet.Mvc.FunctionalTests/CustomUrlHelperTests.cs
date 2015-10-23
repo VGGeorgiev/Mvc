@@ -34,11 +34,19 @@ namespace Microsoft.AspNet.Mvc.FunctionalTests
         [Fact]
         public async Task CustomUrlHelper_UseAllRouteValues()
         {
-            var result = await Client.GetAsync("/api/RouteValueUsage/urlHelper/helper");
-            var path = await result.Content.ReadAsStringAsync();
+            // Arrange and Act
+            var idResult = await Client.GetAsync("/api/RouteValueUsage/urlHelper/helper");
+            var baseResult = await Client.GetAsync("/api/RouteValueUsage/urlHelper/base");
 
-            Assert.NotNull(path);
-            Assert.Equal("/api/routevalueusage/get/1234", path);
+            var idPath = await idResult.Content.ReadAsStringAsync();
+            var basePath = await baseResult.Content.ReadAsStringAsync();
+
+            // Assert
+            Assert.NotNull(idPath);
+            Assert.Equal("/api/routevalueusage/get/1234", idPath);
+
+            Assert.NotNull(basePath);
+            Assert.Equal("/api/routevalueusage/get", basePath);
         }
 
         private static IUrlHelper CreateUrlHelper(IServiceProvider services)
