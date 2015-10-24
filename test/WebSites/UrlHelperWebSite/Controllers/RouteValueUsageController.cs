@@ -16,26 +16,38 @@ namespace UrlHelperWebSite.Controllers
             _urlHelper = urlHelper;
         }
 
-        [HttpGet("urlHelper/helper")]
-        public string UrlHelper()
+        [HttpGet("urlHelper/helper/{which}")]
+        public string UrlHelper(string which)
         {
-            return _urlHelper.Action("Get", "RouteValueUsage", new { id = 1234 });
+            return _urlHelper.Action(which, "RouteValueUsage", new { id = 1234 });
         }
 
-        [HttpGet("urlHelper/base")]
-        public string UrlHelperBase()
+        [HttpGet("urlHelper/base/{which}")]
+        public string UrlHelperBase(string which)
         {
-            return _urlHelper.Action("Get", "RouteValueUsage");
+            return _urlHelper.Action(which, "RouteValueUsage");
         }
 
-        [HttpGet("Get/{id}")]
-        public string Get(int id)
+        [HttpGet("default/{id=0}")]
+        public string Default(int id)
         {
             return "routevalue: " + id;
         }
 
-        [HttpGet("Get")]
-        public string Get()
+        [HttpGet("default")]
+        public string Default()
+        {
+            return "BASEGET";
+        }
+
+        [HttpGet("base/{id}")]
+        public string Base(int id)
+        {
+            return "routevalue: " + id;
+        }
+
+        [HttpGet("base")]
+        public string Base()
         {
             return "BASEGET";
         }

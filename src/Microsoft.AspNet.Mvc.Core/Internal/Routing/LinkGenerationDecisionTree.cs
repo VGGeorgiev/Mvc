@@ -66,7 +66,7 @@ namespace Microsoft.AspNet.Mvc.Internal.Routing
             // to the results.
             for (var i = 0; i < node.Matches.Count; i++)
             {
-                results.Add(new LinkGenerationMatch(node.Matches[i], isFallbackPath));
+                results.Add(new LinkGenerationMatch(node.Matches[i], isFallbackPath, context.Values));
             }
 
             for (var i = 0; i < node.Criteria.Count; i++)
@@ -138,23 +138,15 @@ namespace Microsoft.AspNet.Mvc.Internal.Routing
                 {
                     return x.Entry.Order.CompareTo(y.Entry.Order);
                 }
-                
-                //By number of parameters
-                if(x.Entry.Template.Parameters != y.Entry.Template.Parameters)
+
+                if(x.ParameterCount != y.ParameterCount)
                 {
-                    //We need this to be in descending order, entry's with more parameters go first
-                    return y.Entry.Template.Parameters.Count.CompareTo(x.Entry.Template.Parameters.Count);
+                    return y.ParameterCount.CompareTo(x.ParameterCount);
                 }
 
-                //Second by if those variables are default/optional
-                var isDefault = new Func<TemplatePart, bool>(p => p.DefaultValue != null || p.IsCatchAll || p.IsOptional);
-
-                var xDefaultParams = x.Entry.Template.Parameters.Count(isDefault);
-                var yDefaultParams = y.Entry.Template.Parameters.Count(isDefault);
-
-                if (xDefaultParams != yDefaultParams)
+                if(x.DefaultParameters != y.DefaultParameters)
                 {
-                    return xDefaultParams.CompareTo(yDefaultParams);
+                    return x.DefaultParameters.CompareTo(y.DefaultParameters);
                 }
 
                 if (x.IsFallbackMatch != y.IsFallbackMatch)

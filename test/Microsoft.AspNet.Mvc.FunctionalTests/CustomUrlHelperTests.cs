@@ -32,21 +32,38 @@ namespace Microsoft.AspNet.Mvc.FunctionalTests
         public HttpClient Client { get; }
 
         [Fact]
-        public async Task CustomUrlHelper_UseAllRouteValues()
+        public async Task CustomUrlHelper_UseProvidedValues()
         {
-            // Arrange and Act
-            var idResult = await Client.GetAsync("/api/RouteValueUsage/urlHelper/helper");
-            var baseResult = await Client.GetAsync("/api/RouteValueUsage/urlHelper/base");
+            var idResult = await Client.GetAsync("/api/RouteValueUsage/urlHelper/helper/Base");
+          var baseResult = await Client.GetAsync("/api/RouteValueUsage/urlHelper/base/Base");
 
             var idPath = await idResult.Content.ReadAsStringAsync();
             var basePath = await baseResult.Content.ReadAsStringAsync();
 
             // Assert
             Assert.NotNull(idPath);
-            Assert.Equal("/api/routevalueusage/get/1234", idPath);
+            Assert.Equal("/api/routevalueusage/base/1234", idPath);
 
             Assert.NotNull(basePath);
-            Assert.Equal("/api/routevalueusage/get", basePath);
+            Assert.Equal("/api/routevalueusage/base", basePath);
+        }
+
+        [Fact]
+        public async Task CustomUrlHelper_UseDefaultValues()
+        {
+            // Arrange and Act
+            var idResult = await Client.GetAsync("/api/RouteValueUsage/urlHelper/helper/Default");
+            var baseResult = await Client.GetAsync("/api/RouteValueUsage/urlHelper/base/Default");
+
+            var idPath = await idResult.Content.ReadAsStringAsync();
+            var basePath = await baseResult.Content.ReadAsStringAsync();
+
+            // Assert
+            Assert.NotNull(idPath);
+            Assert.Equal("/api/routevalueusage/default/1234", idPath);
+
+            Assert.NotNull(basePath);
+            Assert.Equal("/api/routevalueusage/default", basePath);
         }
 
         private static IUrlHelper CreateUrlHelper(IServiceProvider services)
